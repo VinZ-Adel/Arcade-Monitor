@@ -42,9 +42,10 @@ namespace Arcade_Monitor
 				if (read)
 				{
 					char[] chars = config[i].ToCharArray();
-					if (chars[0] == '.')
+					if (chars[0] == '.' && (chars[1] == '/' || chars[1] == '\\'))
 					{
-						folders.Add(directory + chars[1..]);
+                        string temp1 = new(chars[2..]);
+                        folders.Add(directory + temp1);
 					}
 					else if (chars[0] == '[')
 					{
@@ -74,8 +75,10 @@ namespace Arcade_Monitor
 			{
 				//Match match = regex.Match(gameEx);
 				//gameNames.Add(match.Value.Split(".")[0]);
-				string[] temp = gameEx.Split(@"\");
-				gameNames.Add(temp[^1].Split(".")[0]);
+				string[] _temp = gameEx.Split(@"\");
+                string temp = _temp[^1].Split(".")[0];
+                if (temp != "UnityCrashHandler64")
+				    gameNames.Add(temp);
 			}
 
 			string tempFound = "";
@@ -148,35 +151,35 @@ namespace Arcade_Monitor
             //Process thisProcess = Process.GetCurrentProcess();
 
             string tempRunning = "";
-			string tempFound = "";
-			string tempDirs = "";
+            string tempFound = "";
+            string tempDirs = "";
 
-			foreach (Process p in runningGames)
+            foreach (Process p in runningGames)
                 tempRunning += '\n' + p.ProcessName;
             richTextBoxRunning.Text = tempRunning;
-			foreach (string game in gameNames)
-				tempFound += "\n" + game;
-			richTextBoxFound.Text = tempFound;
-			foreach (string dir in folders)
-				tempDirs += "\n" + dir;
-			richTextBoxDirs.Text = tempDirs;
+            foreach (string game in gameNames)
+                tempFound += "\n" + game;
+            richTextBoxFound.Text = tempFound;
+            foreach (string dir in folders)
+                tempDirs += "\n" + dir;
+            richTextBoxDirs.Text = tempDirs;
 
             nint focusHWND = Win32.GetForegroundWindow();
 
-            //If no games have focus								and there are games running		and this window doesn't have focus
-            if (!runningGames.Any(c => c.MainWindowHandle == focusHWND) && runningGames.Count() >= 1 && this.Handle != focusHWND) //thisProcess.MainWindowHandle
+            if (this.Handle != focusHWND) //only if this window doesn't have focus
             {
-                ForceWindowIntoForeground(runningGames[^1].MainWindowHandle); //force focus to game
-            }       //if no games are running	and menu IS running			and menu doesn't have focus
-            else if (runningGames.Count() == 0 && runningMains.Count >= 1 && !runningMains.Any(c => c.MainWindowHandle == focusHWND))
-            {
-                ForceWindowIntoForeground(runningMains[^1].MainWindowHandle); //force focus to menu
+                //If no games have focus								       and there are games running
+                if (!runningGames.Any(c => c.MainWindowHandle == focusHWND) && runningGames.Count() >= 1) //thisProcess.MainWindowHandle
+                {
+                    ForceWindowIntoForeground(runningGames[^1].MainWindowHandle); //force focus to game
+                }       //if no games are running	and menu IS running			and menu doesn't have focus
+                else if (runningGames.Count() == 0 && runningMains.Count >= 1 && !runningMains.Any(c => c.MainWindowHandle == focusHWND))
+                {
+                    ForceWindowIntoForeground(runningMains[^1].MainWindowHandle); //force focus to menu
+                }
             }
-            else
-            {
-                if (runningMains.Count() == 0) //if no menu is running
-                    Process.Start(mainExe); //start
-            }
+            if (runningMains.Count() == 0) //if no menu is running
+                Process.Start(mainExe); //start
 
 
 
