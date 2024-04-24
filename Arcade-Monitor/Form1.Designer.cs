@@ -49,7 +49,7 @@
 			// label1
 			// 
 			label1.AutoSize = true;
-			label1.Location = new Point(85, 9);
+			label1.Location = new Point(118, 9);
 			label1.Name = "label1";
 			label1.Size = new Size(38, 15);
 			label1.TabIndex = 0;
@@ -92,6 +92,8 @@
 			// checkBox1
 			// 
 			checkBox1.AutoSize = true;
+			checkBox1.Checked = true;
+			checkBox1.CheckState = CheckState.Checked;
 			checkBox1.Location = new Point(405, 55);
 			checkBox1.Name = "checkBox1";
 			checkBox1.Size = new Size(95, 19);
@@ -100,10 +102,10 @@
 			checkBox1.UseVisualStyleBackColor = true;
 			checkBox1.CheckedChanged += checkBox1_CheckedChanged;
 			// 
-			// richTextBox1
+			// richTextBoxRunning
 			// 
 			richTextBoxRunning.Location = new Point(36, 139);
-			richTextBoxRunning.Name = "richTextBox1";
+			richTextBoxRunning.Name = "richTextBoxRunning";
 			richTextBoxRunning.Size = new Size(200, 275);
 			richTextBoxRunning.TabIndex = 5;
 			richTextBoxRunning.Text = "";
@@ -117,10 +119,10 @@
 			label3.TabIndex = 6;
 			label3.Text = "Games currently running:";
 			// 
-			// richTextBox2
+			// richTextBoxFound
 			// 
 			richTextBoxFound.Location = new Point(300, 139);
-			richTextBoxFound.Name = "richTextBox2";
+			richTextBoxFound.Name = "richTextBoxFound";
 			richTextBoxFound.Size = new Size(200, 275);
 			richTextBoxFound.TabIndex = 7;
 			richTextBoxFound.Text = "";
@@ -139,14 +141,14 @@
 			label5.AutoSize = true;
 			label5.Location = new Point(12, 9);
 			label5.Name = "label5";
-			label5.Size = new Size(67, 15);
+			label5.Size = new Size(100, 15);
 			label5.TabIndex = 9;
-			label5.Text = "Current dir:";
+			label5.Text = "Current dir/ error:";
 			// 
-			// richTextBox3
+			// richTextBoxDirs
 			// 
 			richTextBoxDirs.Location = new Point(564, 139);
-			richTextBoxDirs.Name = "richTextBox3";
+			richTextBoxDirs.Name = "richTextBoxDirs";
 			richTextBoxDirs.Size = new Size(200, 275);
 			richTextBoxDirs.TabIndex = 10;
 			richTextBoxDirs.Text = "";
