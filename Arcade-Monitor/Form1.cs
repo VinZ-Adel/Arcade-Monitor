@@ -179,9 +179,16 @@ namespace Arcade_Monitor
                 {
                     ForceWindowIntoForeground(runningGames[^1].MainWindowHandle); //force focus to game
                 }       //if no games are running	and menu IS running			and menu doesn't have focus
-                else if (runningGames.Count() == 0 && runningMains.Count >= 1 && !runningMains.Any(c => c.MainWindowHandle == focusHWND))
+                else if (runningGames.Count() == 0 && runningMains.Count >= 1)
                 {
-                    ForceWindowIntoForeground(runningMains[^1].MainWindowHandle); //force focus to menu
+                    if(!runningMains.Any(c => c.MainWindowHandle == focusHWND))
+                        ForceWindowIntoForeground(runningMains[^1].MainWindowHandle); //force focus to menu
+                    if (runningMains[^1].MainWindowTitle.Contains(".exe"))
+                    {
+                        Win32.ShowWindow(runningMains[^1].MainWindowHandle, 6); //if min title contains ".exe",
+                                                                                //minimize it, because it's the wrong one
+                        timer1.Interval = 200;
+                    }
                 }
             }
             if (runningMains.Count() == 0) //if no menu is running
