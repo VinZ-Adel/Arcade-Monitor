@@ -42,6 +42,8 @@
             label5 = new Label();
             richTextBoxDirs = new RichTextBox();
             label6 = new Label();
+            richTextBoxMenus = new RichTextBox();
+            label7 = new Label();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -107,7 +109,7 @@
             // 
             richTextBoxRunning.Location = new Point(36, 139);
             richTextBoxRunning.Name = "richTextBoxRunning";
-            richTextBoxRunning.Size = new Size(200, 275);
+            richTextBoxRunning.Size = new Size(200, 106);
             richTextBoxRunning.TabIndex = 5;
             richTextBoxRunning.Text = "";
             // 
@@ -163,11 +165,30 @@
             label6.TabIndex = 11;
             label6.Text = "Game directories:";
             // 
+            // richTextBoxMenus
+            // 
+            richTextBoxMenus.Location = new Point(36, 308);
+            richTextBoxMenus.Name = "richTextBoxMenus";
+            richTextBoxMenus.Size = new Size(200, 106);
+            richTextBoxMenus.TabIndex = 12;
+            richTextBoxMenus.Text = "";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(65, 276);
+            label7.Name = "label7";
+            label7.Size = new Size(138, 15);
+            label7.TabIndex = 13;
+            label7.Text = "Menu instances running:";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label7);
+            Controls.Add(richTextBoxMenus);
             Controls.Add(label6);
             Controls.Add(richTextBoxDirs);
             Controls.Add(label5);
@@ -180,6 +201,7 @@
             Controls.Add(label1);
             Name = "Form1";
             Text = "Arcade Monitor";
+            WindowState = FormWindowState.Minimized;
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -202,5 +224,7 @@
         private Label label5;
 		private RichTextBox richTextBoxDirs;
 		private Label label6;
-	}
+        private RichTextBox richTextBoxMenus;
+        private Label label7;
+    }
 }

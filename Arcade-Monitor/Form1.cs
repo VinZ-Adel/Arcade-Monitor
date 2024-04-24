@@ -153,21 +153,27 @@ namespace Arcade_Monitor
             string tempRunning = "";
             string tempFound = "";
             string tempDirs = "";
+            string tempMenus = "";
 
             foreach (Process p in runningGames)
-                tempRunning += '\n' + p.ProcessName;
+                tempRunning += p.ProcessName + "\n";
             richTextBoxRunning.Text = tempRunning;
             foreach (string game in gameNames)
-                tempFound += "\n" + game;
+                tempFound += game + "\n";
             richTextBoxFound.Text = tempFound;
             foreach (string dir in folders)
-                tempDirs += "\n" + dir;
+                tempDirs += dir + "\n";
             richTextBoxDirs.Text = tempDirs;
+            foreach (Process menu in runningMains)
+                tempMenus += menu.ProcessName + "\n";
+            richTextBoxMenus.Text = tempMenus;
+
 
             nint focusHWND = Win32.GetForegroundWindow();
 
             if (this.Handle != focusHWND) //only if this window doesn't have focus
             {
+                this.WindowState = FormWindowState.Minimized;
                 //If no games have focus								       and there are games running
                 if (!runningGames.Any(c => c.MainWindowHandle == focusHWND) && runningGames.Count() >= 1) //thisProcess.MainWindowHandle
                 {
