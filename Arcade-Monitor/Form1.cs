@@ -8,36 +8,86 @@ namespace Arcade_Monitor
         const string MainName = "adelfors-arcade";
         string directory;
         string mainExe;
-        List<string> gameNames = new();
+		string configPath;
+		string[] config = [];
+
+		List<string> gameNames = new();
         bool skip = false;
         List<string> folders = new();
 
-        Regex regex = new(@"\w*\.exe*$", RegexOptions.IgnoreCase);
+		//readonly Regex regex = new(@"\w*\.exe*$", RegexOptions.IgnoreCase);
 
-        public Form1()
-        {
-            InitializeComponent();
-            directory = System.AppDomain.CurrentDomain.BaseDirectory;
-            label1.Text = directory;
-            mainExe = directory + "\\adelfors-arcade.exe";
+		public Form1()
+		{
+			InitializeComponent();
+			directory = System.AppDomain.CurrentDomain.BaseDirectory;
+			label1.Text = directory;
+			mainExe = directory + @"/adelfors-arcade.exe";
+			configPath = directory + @"/arcade_config.txt";
 
-            List<string> gameExes = new();
-            try
-            {
-                foreach (string fl in folders)
-                {
-                    gameExes.AddRange(Directory.GetFiles(fl, "*.EXE", SearchOption.AllDirectories));
-                }
-                foreach (string gameEx in gameExes)
-                {
-                    //Match match = regex.Match(gameEx);
-                    string[] temp = gameEx.Split(@"\");
-                    gameNames.Add(temp[^1].Split(".")[0]);
-                    //gameNames.Add(match.Value.Split(".")[0]);
-                }
-            }
-            catch { MessageBox.Show("ERROR: No \"\\games\" directory found."); skip = true; gameNames = ["ERROR"]; }
-        }
+			try
+			{
+				config = File.ReadAllLines(configPath);
+			}
+			catch { }
+
+			bool read = false;
+			for (int i = 0; i < config.Count(); i++)
+			{
+				if (config[i] == "[Folders]")
+				{
+					read = true;
+					continue;
+				}
+				if (read)
+				{
+					char[] chars = config[i].ToCharArray();
+					if (chars[0] == '.')
+					{
+						folders.Add(directory + chars[1..]);
+					}
+					else if (chars[0] == '[')
+					{
+						read = false;
+						continue;
+					}
+					else { folders.Add(config[i]); }
+				}
+			}
+
+			if (folders.Count == 0)
+			{
+				folders.Add(directory + @"/games");
+			}
+
+
+			List<string> gameExes = new();
+			foreach (string fl in folders)
+			{
+				try
+				{
+					gameExes.AddRange(Directory.GetFiles(fl, "*.EXE", SearchOption.AllDirectories));
+				}
+				catch { label1.Text = "ERROR: Problem with one or more game directories. Please check config file syntax."; skip = true; gameNames = ["ERROR"]; }
+			}
+			foreach (string gameEx in gameExes)
+			{
+				//Match match = regex.Match(gameEx);
+				//gameNames.Add(match.Value.Split(".")[0]);
+				string[] temp = gameEx.Split(@"\");
+				gameNames.Add(temp[^1].Split(".")[0]);
+			}
+
+			string tempFound = "";
+			string tempDirs = "";
+
+			foreach (string game in gameNames)
+				tempFound += "\n" + game;
+			richTextBoxFound.Text = tempFound;
+			foreach (string dir in folders)
+				tempDirs += "\n" + dir;
+			richTextBoxDirs.Text = tempDirs;
+		}
 
 
 
@@ -95,15 +145,21 @@ namespace Arcade_Monitor
                 runningGames = processes.Where(c => gameNames.Contains(c.ProcessName) && c.ProcessName != "UnityCrashHandler64").ToList();
             }
             List<Process> runningMains = processes.Where(c => MainName == c.ProcessName).ToList();
-            Process thisProcess = Process.GetCurrentProcess();
+            //Process thisProcess = Process.GetCurrentProcess();
 
-            string tempi = "";
+            string tempRunning = "";
+			string tempFound = "";
+			string tempDirs = "";
 
-            foreach (Process p in runningGames)
-                tempi += '\n' + p.ProcessName;
-            richTextBox1.Text = tempi;
-
-            //List<List<Process>> lists = new() { runningGames, runningMains, thisProcess };
+			foreach (Process p in runningGames)
+                tempRunning += '\n' + p.ProcessName;
+            richTextBoxRunning.Text = tempRunning;
+			foreach (string game in gameNames)
+				tempFound += "\n" + game;
+			richTextBoxFound.Text = tempFound;
+			foreach (string dir in folders)
+				tempDirs += "\n" + dir;
+			richTextBoxDirs.Text = tempDirs;
 
             nint focusHWND = Win32.GetForegroundWindow();
 
@@ -118,8 +174,8 @@ namespace Arcade_Monitor
             }
             else
             {
-                if (runningMains.Count() == 0)
-                    Process.Start(mainExe);
+                if (runningMains.Count() == 0) //if no menu is running
+                    Process.Start(mainExe); //start
             }
 
 
@@ -158,11 +214,6 @@ namespace Arcade_Monitor
             CheckBox? cb = sender as CheckBox;
             if (cb != null)
                 timer1.Enabled = cb.Checked;
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
