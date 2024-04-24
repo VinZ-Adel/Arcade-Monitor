@@ -42,17 +42,20 @@ namespace Arcade_Monitor
 				if (read)
 				{
 					char[] chars = config[i].ToCharArray();
-					if (chars[0] == '.' && (chars[1] == '/' || chars[1] == '\\'))
-					{
-                        string temp1 = new(chars[2..]);
-                        folders.Add(directory + temp1);
-					}
-					else if (chars[0] == '[')
-					{
-						read = false;
-						continue;
-					}
-					else { folders.Add(config[i]); }
+                    if (chars.Count() != 0)
+                    {
+                        if (chars[0] == '.' && (chars[1] == '/' || chars[1] == '\\'))
+                        {
+                            string temp1 = new(chars[2..]);
+                            folders.Add(directory + temp1);
+                        }
+                        else if (chars[0] == '[')
+                        {
+                            read = false;
+                            continue;
+                        }
+                        else { folders.Add(config[i]); }
+                    }
 				}
 			}
 
